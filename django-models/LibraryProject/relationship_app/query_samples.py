@@ -2,20 +2,15 @@ import os
 import sys
 import django
 
-# --- Add the project root (where manage.py lives) to Python path ---
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-# --- Set the Django settings module ---
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'LibraryProject.settings')
 django.setup()
 
-# --- Import models ---
 from relationship_app.models import Author, Book, Library, Librarian
 
-# -----------------------------
-# QUERY 1: All books by a specific author
-# -----------------------------
 author_name = 'J.K. Rowling'
+library_name = 'Central Library'
+
 try:
     author = Author.objects.get(name=author_name)
     books_by_author = Book.objects.filter(author=author)
@@ -27,26 +22,18 @@ except Author.DoesNotExist:
 
 print("\n" + "="*50 + "\n")
 
-# -----------------------------
-# QUERY 2: List all books in a specific library
-# -----------------------------
-library_name = 'Central Library'
 try:
     library = Library.objects.get(name=library_name)
     books_in_library = library.books.all()
     print(f"Books in {library_name}:")
     for book in books_in_library:
         print(f"- {book.title}")
+
+    try:
+        librarian = Librarian.objects.get(library=library)
+        print(f"Librarian for {library_name}: {librarian.name}")
+    except Librarian.DoesNotExist:
+        print(f"No librarian assigned to {library_name}")
+
 except Library.DoesNotExist:
     print(f"No library found with name {library_name}")
-
-print("\n" + "="*50 + "\n")
-
-# -----------------------------
-# QUERY 3: Retrieve the librarian for a library
-# -----------------------------
-try:
-    librarian = library.librarian  # OneToOneField reverse lookup
-    print(f"Librarian for {library_name}: {librarian.name}")
-except AttributeError:
-    print(f"No librarian assigned to {library_name}")
