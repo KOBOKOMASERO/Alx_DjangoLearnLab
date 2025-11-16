@@ -152,3 +152,6 @@ LOGIN_REDIRECT_URL = '/'  # optional: redirect after login
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# trust X-Forwarded-Proto header for SSL detection
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
