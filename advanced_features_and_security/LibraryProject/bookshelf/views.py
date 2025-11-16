@@ -2,17 +2,17 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import permission_required
 from .models import Book, Author
 from .forms import BookForm
-from .forms import ExampleForm 
-
+from .forms import ExampleForm
 # -----------------------
 # Book Views
 # -----------------------
+@permission_required('bookshelf.can_view', raise_exception=True)
 def list_books(request):
     books = Book.objects.all()
     return render(request, 'bookshelf/book_list.html', {'books': books})
 
 
-@permission_required('bookshelf.can_add_book')
+@permission_required('bookshelf.can_create', raise_exception=True)
 def add_book(request):
     if request.method == 'POST':
         form = BookForm(request.POST)
@@ -24,7 +24,7 @@ def add_book(request):
     return render(request, 'bookshelf/book_form.html', {'form': form})
 
 
-@permission_required('bookshelf.can_change_book')
+@permission_required('bookshelf.can_edit', raise_exception=True)
 def edit_book(request, pk):
     book = get_object_or_404(Book, pk=pk)
     if request.method == 'POST':
@@ -37,7 +37,7 @@ def edit_book(request, pk):
     return render(request, 'bookshelf/book_form.html', {'form': form})
 
 
-@permission_required('bookshelf.can_delete_book')
+@permission_required('bookshelf.can_delete', raise_exception=True)
 def delete_book(request, pk):
     book = get_object_or_404(Book, pk=pk)
     if request.method == 'POST':
@@ -47,7 +47,7 @@ def delete_book(request, pk):
 
 
 # -----------------------
-# Minimal ExampleForm view (optional for ALX)
+# Minimal ExampleForm view
 # -----------------------
 def example_form_view(request):
     if request.method == 'POST':
