@@ -30,7 +30,7 @@ ALLOWED_HOSTS = ['kobokophilip@gmail.com', 'localhost', '127.0.0.1']
 # Security settings
 SECURE_BROWSER_XSS_FILTER = True #Enable XSS filter
 SECURE_CONTENT_TYPE_NOSNIFF = True #Prevent MIME-type sniffing
-X-FRAME_OPTIONS = 'DENY' #Prevent clickjacking
+X_FRAME_OPTIONS = 'DENY' #Prevent clickjacking
 
 #Ensure cookies are only sent over HTTPS
 SESSION_COOKIE_SECURE = True #Ensure cookies are only sent over HTTPS
