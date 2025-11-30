@@ -29,7 +29,6 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,10 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_filters.rest_framework.DjangoFilterBackend',
-    'rest_framework.filters.SearchFilter',
-    'rest_framework.filters.OrderingFilter',
     'rest_framework',
+    'django_filters',
     'api',
 ]
 
