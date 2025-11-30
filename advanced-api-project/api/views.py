@@ -1,5 +1,7 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
 from .models import Book
 from .serializers import BookSerializer
 
@@ -9,19 +11,28 @@ class BookListView(generics.ListAPIView):
     Retrieves all Book instances.
     - GET method
     - Accessible to anyone (read-only)
-    - Uses BookSerializer to serialize data
+    - Supports filtering, searching, and ordering
+    Filtering: title, author, publication_year
+    Searching: title, author
+    Ordering: title, publication_year
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+
+    # Enable filtering, searching, and ordering
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['title', 'author', 'publication_year']   # filtering
+    search_fields = ['title', 'author__name']                    # searching
+    ordering_fields = ['title', 'publication_year']             # ordering
+    ordering = ['title']  # default ordering
 
 class BookDetailView(generics.RetrieveAPIView):
     """
     BookDetailView:
     Retrieves a single Book by primary key (id).
     - GET method
-    - Accessible to anyone (read-only)
-    - Uses BookSerializer to serialize data
+    - Accessible to anyone
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
@@ -33,7 +44,6 @@ class BookCreateView(generics.CreateAPIView):
     Creates a new Book instance.
     - POST method
     - Requires authentication
-    - Uses BookSerializer for input validation and serialization
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
@@ -45,8 +55,6 @@ class BookUpdateView(generics.UpdateAPIView):
     Updates an existing Book instance.
     - PUT/PATCH methods
     - Requires authentication
-    - Book is identified by primary key in the URL or in the request data if customized
-    - Uses BookSerializer for validation
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
@@ -58,7 +66,6 @@ class BookDeleteView(generics.DestroyAPIView):
     Deletes an existing Book instance.
     - DELETE method
     - Requires authentication
-    - Book is identified by primary key in the URL or in the request data if customized
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
