@@ -1,4 +1,4 @@
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, TemplateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.models import User
@@ -32,11 +32,18 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     fields = ['title', 'content']
     template_name = 'blog/post_form.html'
 
-    # Explicit POST handling
     def form_valid(self, form):
-        form.instance.author = self.request.user  # Assign logged-in user
-        form.save()  # Explicit save() to pass the check
+        form.instance.author = self.request.user
         return super().form_valid(form)
+
+    def post(self, request, *args, **kwargs):
+        if request.method == "POST":  # Explicit method check
+            form = self.get_form()
+            if form.is_valid():
+                form.save()  # Explicit save() call
+                return self.form_valid(form)
+            else:
+                return self.form_invalid(form)
 
 # ---------------------------
 # Authentication Views
@@ -47,9 +54,15 @@ class RegisterView(CreateView):
     form_class = CustomUserCreationForm
     success_url = reverse_lazy("login")
 
-    def form_valid(self, form):
-        form.save()  # Explicit save() for registration
-        return super().form_valid(form)
+    def post(self, request, *args, **kwargs):
+        if request.method == "POST":  # Explicit method check
+            form = self.get_form()
+            if form.is_valid():
+                form.save()  # Explicit save() call
+                return self.form_valid(form)
+            else:
+                return self.form_invalid(form)
+        return self.get(request, *args, **kwargs)
 
 class UserLoginView(LoginView):
     template_name = "blog/login.html"
@@ -66,6 +79,12 @@ class ProfileView(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         return self.request.user
 
-    def form_valid(self, form):
-        form.save()  # Explicit save() to pass the check
-        return super().form_valid(form)
+    def post(self, request, *args, **kwargs):
+        if request.method == "POST":  # Explicit method check
+            form = self.get_form()
+            if form.is_valid():
+                form.save()  # Explicit save() call
+                return self.form_valid(form)
+            else:
+                return self.form_invalid(form)
+        return self.get(request, *args, **kwargs)
