@@ -46,3 +46,6 @@ Thumbs.db
 .env
 *.secret
 config/settings_local.py
+
+# Ignore virtual environments
+venv/
