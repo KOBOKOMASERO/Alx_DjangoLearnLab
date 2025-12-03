@@ -1,0 +1,48 @@
+# -----------------------------
+# Python
+# -----------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# -----------------------------
+# Virtual environment
+# -----------------------------
+venv/
+env/
+.venv/
+ENV/
+*.env
+
+# -----------------------------
+# Django
+# -----------------------------
+*.sqlite3           # ignore local database
+*.log               # log files
+media/              # uploaded files
+staticfiles/        # collected static files (if using collectstatic)
+db.sqlite3          # local DB (if using SQLite)
+*.pot               # translation files
+*.py[co]
+
+# -----------------------------
+# OS / Editor
+# -----------------------------
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.sublime-workspace
+*.sublime-project
+
+# VS Code
+.vscode/
+
+# -----------------------------
+# Environment & secrets
+# -----------------------------
+.env
+*.secret
+config/settings_local.py
