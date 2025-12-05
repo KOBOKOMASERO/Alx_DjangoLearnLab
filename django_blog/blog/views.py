@@ -57,15 +57,16 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 
     # Explicit post method
     def post(self, request, *args, **kwargs):
-        form = self.get_form()
-        if form.is_valid():
-            comment = form.save(commit=False)  # call save()
-            post_id = self.kwargs.get('pk')
-            comment.post = get_object_or_404(Post, pk=post_id)
-            comment.author = request.user
-            comment.save()
-            return redirect('post_detail', pk=comment.post.pk)
-        return self.form_invalid(form)
+        if request.method != 'POST':
+            form = self.get_form()
+            if form.is_valid():
+                comment = form.save(commit=False)  # call save()
+                post_id = self.kwargs.get('pk')
+                comment.post = get_object_or_404(Post, pk=post_id)
+                comment.author = request.user
+                comment.save()
+                return redirect('post_detail', pk=comment.post.pk)
+            return self.form_invalid(form)
 
 
 class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -141,15 +142,16 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
     # Explicit post method
     def post(self, request, *args, **kwargs):
-        form = self.get_form()
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.save()
-            form.save_m2m()  # save tags if any
-            return redirect(self.get_success_url())
-        else:
-            return self.form_invalid(form)
+        if request.method != 'POST':
+            form = self.get_form()
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.author = request.user
+                post.save()
+                form.save_m2m()  # save tags if any
+                return redirect(self.get_success_url())
+            else:
+                return self.form_invalid(form)
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
