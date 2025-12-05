@@ -1,4 +1,5 @@
 from django.urls import path
+from .views import add_comment, CommentUpdateView, CommentDeleteView
 from .views import (
 HomeView, PostListView, PostDetailView, PostCreateView,
 PostUpdateView, PostDeleteView,
@@ -13,8 +14,9 @@ path('post/new/', PostCreateView.as_view(), name='post_create'),
 path('post/<int:pk>/', PostDetailView.as_view(), name='post_detail'),
 path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post_update'),
 path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post_delete'),
-
-
+path('posts/<int:post_id>/comments/new/', add_comment, name='add_comment'),
+path('comments/<int:pk>/edit/', CommentUpdateView.as_view(), name='comment_update'),
+path('comments/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment_delete'),
 
 # Authentication URLs
 path('register/', RegisterView.as_view(), name='register'),
