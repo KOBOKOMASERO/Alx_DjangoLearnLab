@@ -1,13 +1,15 @@
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
-from .models import Post
-from .forms import CustomUserCreationForm
+from .models import Post, Profile
+from .forms import CustomUserCreationForm, ProfileForm
 
 # ---------------------------
+
 # Blog Views
+
 # ---------------------------
 
 class HomeView(ListView):
@@ -31,22 +33,56 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     fields = ['title', 'content']
     template_name = 'blog/post_form.html'
+    success_url = reverse_lazy('posts')
 
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        return super().form_valid(form)
 
-    def post(self, request, *args, **kwargs):
-        if request.method == "POST":  # Explicit method check
-            form = self.get_form()
-            if form.is_valid():
-                form.save()  # Explicit save() call
-                return self.form_valid(form)
-            else:
-                return self.form_invalid(form)
+def form_valid(self, form):
+    form.instance.author = self.request.user
+    return super().form_valid(form)
+
+def post(self, request, *args, **kwargs):
+    form = self.get_form()
+    if form.is_valid():
+        form.save()
+        return self.form_valid(form)
+    else:
+        return self.form_invalid(form)
+    
+
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Post
+    fields = ['title', 'content']
+    template_name = 'blog/post_form.html'
+    success_url = reverse_lazy('posts')
+
+
+def test_func(self):
+    post = self.get_object()
+    return self.request.user == post.author
+
+def post(self, request, *args, **kwargs):
+    form = self.get_form()
+    if form.is_valid():
+        form.save()
+        return self.form_valid(form)
+    else:
+        return self.form_invalid(form)
+
+
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Post
+    template_name = 'blog/post_confirm_delete.html'
+    success_url = reverse_lazy('posts')
+
+
+def test_func(self):
+    post = self.get_object()
+    return self.request.user == post.author
 
 # ---------------------------
+
 # Authentication Views
+
 # ---------------------------
 
 class RegisterView(CreateView):
@@ -54,15 +90,13 @@ class RegisterView(CreateView):
     form_class = CustomUserCreationForm
     success_url = reverse_lazy("login")
 
-    def post(self, request, *args, **kwargs):
-        if request.method == "POST":  # Explicit method check
-            form = self.get_form()
-            if form.is_valid():
-                form.save()  # Explicit save() call
-                return self.form_valid(form)
-            else:
-                return self.form_invalid(form)
-        return self.get(request, *args, **kwargs)
+def post(self, request, *args, **kwargs):
+    form = self.get_form()
+    if form.is_valid():
+        form.save()
+        return self.form_valid(form)
+    else:
+        return self.form_invalid(form)
 
 class UserLoginView(LoginView):
     template_name = "blog/login.html"
@@ -71,20 +105,19 @@ class UserLogoutView(LogoutView):
     next_page = reverse_lazy("home")
 
 class ProfileView(LoginRequiredMixin, UpdateView):
-    model = User
+    model = Profile
+    form_class = ProfileForm
     template_name = "blog/profile.html"
-    fields = ["username", "email"]
     success_url = reverse_lazy("profile")
 
-    def get_object(self, queryset=None):
-        return self.request.user
 
-    def post(self, request, *args, **kwargs):
-        if request.method == "POST":  # Explicit method check
-            form = self.get_form()
-            if form.is_valid():
-                form.save()  # Explicit save() call
-                return self.form_valid(form)
-            else:
-                return self.form_invalid(form)
-        return self.get(request, *args, **kwargs)
+def get_object(self, queryset=None):
+    return self.request.user.profile
+
+def post(self, request, *args, **kwargs):
+    form = self.get_form()
+    if form.is_valid():
+        form.save()
+        return self.form_valid(form)
+    else:
+        return self.form_invalid(form)

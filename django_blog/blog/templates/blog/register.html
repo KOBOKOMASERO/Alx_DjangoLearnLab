@@ -1,12 +1,33 @@
 {% extends "blog/base.html" %}
-
 {% block title %}Register{% endblock %}
-
 {% block content %}
-<h2>Register</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Sign Up</button>
+<h2>Sign up</h2>
+
+<form method="post" novalidate>
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  {{ form.errors }}
+  
+  <p>
+    <label for="{{ form.username.id_for_label }}">Username:</label><br>
+    {{ form.username }}
+  </p>
+
+  <p>
+    <label for="{{ form.email.id_for_label }}">Email:</label><br>
+    {{ form.email }}
+  </p>
+
+  <p>
+    <label for="{{ form.password1.id_for_label }}">Password:</label><br>
+    {{ form.password1 }}
+  </p>
+
+  <p>
+    <label for="{{ form.password2.id_for_label }}">Confirm Password:</label><br>
+    {{ form.password2 }}
+  </p>
+
+  <button type="submit" class="button">Create Account</button>
 </form>
 {% endblock %}

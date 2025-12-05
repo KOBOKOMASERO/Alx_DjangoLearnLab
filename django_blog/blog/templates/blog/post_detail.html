@@ -3,10 +3,25 @@
 {% block title %}{{ post.title }} - My Django Blog{% endblock %}
 
 {% block content %}
+
 <article>
     <h1>{{ post.title }}</h1>
-    <p><strong>By:</strong> {{ post.author.username }} | <strong>Published:</strong> {{ post.published_date|date:"M d, Y H:i" }}</p>
+    <p>
+        <strong>By:</strong> {{ post.author.username }} |
+        <strong>Published:</strong> {{ post.published_date|date:"M d, Y H:i" }}
+    </p>
     <div>{{ post.content|linebreaks }}</div>
+
+```
+{% if user.is_authenticated and user == post.author %}
+<p>
+    <a href="{% url 'post_update' post.pk %}" class="button">Edit</a>
+    <a href="{% url 'post_delete' post.pk %}" class="button is-danger">Delete</a>
+</p>
+{% endif %}
+```
+
 </article>
-<a href="{% url 'posts' %}">Back to all posts</a>
+
+<a href="{% url 'posts' %}" class="button">Back to All Posts</a>
 {% endblock %}

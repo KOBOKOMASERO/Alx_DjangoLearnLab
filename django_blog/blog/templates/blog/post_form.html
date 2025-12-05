@@ -1,0 +1,29 @@
+{% extends "blog/base.html" %}
+
+{% block title %}{% if form.instance.pk %}Edit Post{% else %}Create Post{% endif %}{% endblock %}
+
+{% block content %}
+
+<h2>{% if form.instance.pk %}Edit{% else %}New{% endif %} Post</h2>
+
+<form method="post">
+  {% csrf_token %}
+
+{{ form.non_field_errors }}
+
+  <p>
+    <label for="{{ form.title.id_for_label }}">Title:</label><br>
+    {{ form.title.errors }}
+    {{ form.title }}
+  </p>
+
+  <p>
+    <label for="{{ form.content.id_for_label }}">Content:</label><br>
+    {{ form.content.errors }}
+    {{ form.content }}
+  </p>
+
+<button type="submit" class="button">{% if form.instance.pk %}Update{% else %}Publish{% endif %}</button>
+
+</form>
+{% endblock %}

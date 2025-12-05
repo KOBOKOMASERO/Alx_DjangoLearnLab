@@ -1,12 +1,27 @@
 {% extends "blog/base.html" %}
-
 {% block title %}Profile{% endblock %}
-
 {% block content %}
 <h2>Your Profile</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Update Profile</button>
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  {{ form.errors }}
+  
+  <p>
+    <label for="{{ form.bio.id_for_label }}">Bio:</label><br>
+    {{ form.bio }}
+  </p>
+
+  <p>
+    <label for="{{ form.avatar.id_for_label }}">Avatar:</label><br>
+    {{ form.avatar }}
+    {% if user.profile.avatar %}
+      <br><img src="{{ user.profile.avatar.url }}" alt="Avatar" width="100">
+    {% endif %}
+  </p>
+
+  <button type="submit" class="button">Save</button>
 </form>
+
 {% endblock %}
