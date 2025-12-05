@@ -9,10 +9,11 @@ urlpatterns = [
 # Blog CRUD URLs
 path('', HomeView.as_view(), name='home'),
 path('posts/', PostListView.as_view(), name='posts'),
-path('posts/new/', PostCreateView.as_view(), name='post_create'),
-path('posts/[int:pk](int:pk)/', PostDetailView.as_view(), name='post_detail'),
-path('posts/[int:pk](int:pk)/edit/', PostUpdateView.as_view(), name='post_update'),
-path('posts/[int:pk](int:pk)/delete/', PostDeleteView.as_view(), name='post_delete'),
+path('post/new/', PostCreateView.as_view(), name='post_create'),
+path('post/<int:pk>/', PostDetailView.as_view(), name='post_detail'),
+path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post_update'),
+path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post_delete'),
+
 
 
 # Authentication URLs
