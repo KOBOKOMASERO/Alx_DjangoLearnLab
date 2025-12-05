@@ -98,9 +98,9 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def get_success_url(self):
         return reverse_lazy('post_detail', kwargs={'pk': self.object.post.pk})
 
-# Explicit post method
-def post(self, request, *args, **kwargs):
-    return super().post(request, *args, **kwargs)
+    # Explicit post method
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
 
 
 
@@ -124,33 +124,32 @@ class SearchView(ListView):
         return context
 
 
-    class PostDetailView(DetailView):
-        model = Post
-        template_name = 'blog/post_detail.html'
-        context_object_name = 'post'
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'blog/post_detail.html'
+    context_object_name = 'post'
 
-    class PostCreateView(LoginRequiredMixin, CreateView):
-        model = Post
-        form_class = PostForm
-        template_name = 'blog/post_form.html'
-        success_url = reverse_lazy('posts')
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'blog/post_form.html'
+    success_url = reverse_lazy('posts')
 
-        def form_valid(self, form):
-            form.instance.author = self.request.user
-            return super().form_valid(form)
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
-        # Explicit post method
-        def post(self, request, *args, **kwargs):
-            form = self.get_form()
-            if form.is_valid():
-                post = form.save(commit=False)
-                post.author = request.user
-                post.save()
-                form.save_m2m()  # save tags if any
-                return redirect(self.get_success_url())
-            else:
-                return self.form_invalid(form)
-
+    # Explicit post method
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            form.save_m2m()  # save tags if any
+            return redirect(self.get_success_url())
+        else:
+            return self.form_invalid(form)
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
