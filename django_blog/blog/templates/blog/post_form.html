@@ -1,6 +1,8 @@
 {% extends "blog/base.html" %}
 
-{% block title %}{% if form.instance.pk %}Edit Post{% else %}Create Post{% endif %}{% endblock %}
+{% block title %}
+    {% if form.instance.pk %}Edit Post{% else %}Create Post{% endif %}
+{% endblock %}
 
 {% block content %}
 
@@ -8,8 +10,7 @@
 
 <form method="post">
   {% csrf_token %}
-
-{{ form.non_field_errors }}
+  {{ form.non_field_errors }}
 
   <p>
     <label for="{{ form.title.id_for_label }}">Title:</label><br>
@@ -23,7 +24,17 @@
     {{ form.content }}
   </p>
 
-<button type="submit" class="button">{% if form.instance.pk %}Update{% else %}Publish{% endif %}</button>
+  <p>
+    <label for="{{ form.tags.id_for_label }}">Tags:</label><br>
+    {{ form.tags.errors }}
+    {{ form.tags }}
+    <small>{{ form.tags.help_text }}</small>
+  </p>
+
+  <button type="submit" class="button">
+    {% if form.instance.pk %}Update{% else %}Publish{% endif %}
+  </button>
 
 </form>
+
 {% endblock %}
