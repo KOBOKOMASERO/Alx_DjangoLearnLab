@@ -2,6 +2,8 @@ from rest_framework import viewsets, permissions, filters
 from rest_framework.pagination import PageNumberPagination
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
+from rest_framework.generics import ListAPIView
+from rest_framework.permissions import IsAuthenticated
 
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 10
@@ -56,3 +58,13 @@ class CommentViewSet(viewsets.ModelViewSet):
         if self.request.user != instance.author:
             raise permissions.PermissionDenied("You cannot delete this comment")
         instance.delete()
+
+# Feed API
+class FeedAPIView(ListAPIView):
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        # get posts by users current user follows
+        user = self.request.user
+        return Post.objects.filter(author__in=user.following.all()).order_by('-created_at')
