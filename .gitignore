@@ -9,6 +9,10 @@ __pycache__/
 venv/
 .env
 
+# Node modules
+node_modules/
+package-lock.json
+
 # Django stuff
 *.log
 *.pot
@@ -16,6 +20,5 @@ venv/
 *.sqlite3
 media/
 
-# Local virtual environments
 Introduction_to_Django/myenv/
 
