@@ -13,6 +13,7 @@ venv/
 node_modules/
 package-lock.json
 
+
 # Django stuff
 *.log
 *.pot
@@ -22,3 +23,24 @@ media/
 
 Introduction_to_Django/myenv/
 
+
+# IDEs
+.vscode/
+.idea/
+# Project-level files
+README.md
+requirements.txt
+runtime.txt (if on Railway/Heroku)
+Procfile (if deploying)
+.env.example (not the real .env)
+
+# Django apps
+accounts/
+posts/
+notifications/
+social_media_api/  # your main project folder with settings.py, urls.py, wsgi.py, etc.
+
+# Only track migrations if you want (optional)
+*/migrations/*.py   # if you want initial migrations in git
+*/migrations/__init__.py
+7c64b2b (seeting)
