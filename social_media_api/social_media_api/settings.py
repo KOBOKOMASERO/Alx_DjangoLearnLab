@@ -104,6 +104,9 @@ DATABASES = {
         conn_max_age=600,
         ssl_require=True
     )
+db_from_env["PORT"] = int(db_from_env.get("PORT", 5432))  # make sure PORT exists
+DATABASES = {"default": db_from_env}
+
 }
 
 # ==============================
